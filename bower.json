@@ -1,0 +1,20 @@
+{
+  "name": "npm updat -g bower",
+  "version": "0.0.0",
+  "authors": [
+    "Pete Haas <petehaas@petehaas.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "toastr": "~2.0.3",
+    "bootstrap": "~3.2.0",
+    "angular": "~1.2.19"
+  }
+}
