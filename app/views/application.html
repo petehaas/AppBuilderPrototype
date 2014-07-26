@@ -1,0 +1,51 @@
+<div class="panel panel-primary" ng-controller="testController">
+    <div class="panel-heading">
+        <i class="fa fa-file-o fa-fw"></i> {{vxmlApp.applicationName}}
+    </div>
+    <!-- /.panel-heading -->
+    <div class="panel-body">
+        <div class="form-group input-group">
+            <span class="input-group-addon">Name</span>
+            <input type="text" class="form-control" value="{{vxmlApp.applicationName}}" placeholder="My Awesome New App">
+        </div>
+        <div class="form-group input-group">
+            <span class="input-group-addon">Description</span>
+            <input type="text" class="form-control" value="{{vxmlApp.applicationDescription}}" placeholder="Use this application to alert customers for backorders">
+        </div>
+        <label>Developer</label>
+        <select class="form-control" ng-model="vxmlApp.maintainer" ng-options="i for i in maintainers"></select><br/>
+        <label>Customer</label>
+        <select class="form-control">
+            <option>Nordstrom</option>
+            <option>USPS</option>
+        </select><br/>
+        <label>Platform</label>
+        <select class="form-control" ng-model="vxmlApp.speechPlatform" ng-options="i for i in platforms"></select><br/>
+
+        <div class="form-group input-group">
+            <span class="input-group-addon">Start Page</span>
+            <input type="text" class="form-control" value="{{vxmlApp.applicationStartPage}}" placeholder="/LiveAgent/LiveAgentSurvey.aspx">
+        </div>
+        <div class="form-group input-group">
+            <span class="input-group-addon">Audio</span>
+            <input type="text" class="form-control" value="{{vxmlApp.audioDirectory}}" placeholder="/Surveys/LiveAgentSurvey">
+        </div>
+        <div class="form-group">
+            <label>Application Settings</label>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" ng-checked="vxmlApp.globalAgentEvent">Agent Event?
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" ng-checked="vxmlApp.transfer">Transfer?
+                </label>
+            </div>
+            <button type="reset" class="btn btn-default">Reset</button>
+            <button type="submit" class="btn btn-default" ng-click="save()">Save</button>
+        </div>
+    </div>
+    <!-- /.panel-body -->
+</div>
+<!-- /.panel -->

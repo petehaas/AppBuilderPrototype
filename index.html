@@ -7,8 +7,11 @@
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/sb-admin.css">
     <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="bower_components/angular-ui-tree/dist/angular-ui-tree.min.css">
+    <link rel="stylesheet" href="animations.css">
+    <link rel="stylesheet" href="app.css">
 </head>
-<body ng-app="">
+<body ng-app="testApp">
 <div id="wrapper">
 
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="margin-bottom: 0">
@@ -233,7 +236,7 @@
 </ul>
 <!-- /.navbar-top-links -->
 
-<div class="navbar-default navbar-static-side" role="navigation">
+<div class="navbar-default navbar-static-side" role="navigation" ng-controller="testController">
     <div class="sidebar-collapse">
         <ul class="nav" id="side-menu">
             <li>
@@ -242,11 +245,8 @@
             <li>
                 <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Apps<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse">
-                    <li>
-                        <a href="#">Nordstrom Survey</a>
-                    </li>
-                    <li>
-                        <a href="#">USPS Live Agent</a>
+                    <li ng-repeat="application in vxmlApps">
+                        <a href="#application/{{application.id}}">{{application.applicationName}}</a>
                     </li>
                 </ul>
                 <!-- /.nav-second-level -->
@@ -262,152 +262,60 @@
 <div id="page-wrapper">
 <div class="row">
     <div class="col-lg-12">
-        <h1 class="page-header">Dashboard</h1>
+        <h1 class="page-header">Apps</h1>
     </div>
     <!-- /.col-lg-12 -->
 </div>
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-8">
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <i class="fa fa-file-o fa-fw"></i> New App
-    </div>
-    <!-- /.panel-heading -->
-    <div class="panel-body">
-        <div class="form-group input-group">
-            <span class="input-group-addon">Name</span>
-            <input type="text" class="form-control" placeholder="My Awesome New App">
-        </div>
-        <div class="form-group input-group">
-            <span class="input-group-addon">Description</span>
-            <input type="text" class="form-control" placeholder="Use this application to alert customers for backorders">
-        </div>
-        <label>Developer</label>
-        <select class="form-control">
-            <option selected>phaas@verascape.com</option>
-            <option>jmitchell@verascape.com</option>
-        </select><br/>
-        <label>Customer</label>
-        <select class="form-control">
-            <option>Nordstrom</option>
-            <option>USPS</option>
-        </select><br/>
-        <label>Platform</label>
-        <select class="form-control">
-            <option selected>Verascape</option>
-            <option>NewNet</option>
-        </select><br/>
-        <div class="form-group input-group">
-            <span class="input-group-addon">Start Page</span>
-            <input type="text" class="form-control" placeholder="/LiveAgent/LiveAgentSurvey.aspx">
-        </div>
-        <div class="form-group input-group">
-            <span class="input-group-addon">Audio</span>
-            <input type="text" class="form-control" placeholder="/Surveys/LiveAgentSurvey">
-        </div>
-        <div class="form-group">
-            <label>Application Settings</label>
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" value="">Agent Event?
-                </label>
-            </div>
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" value="">Transfer?
-                </label>
-            </div>
-            <button type="reset" class="btn btn-default">Reset</button>
-            <button type="submit" class="btn btn-default">Save</button>
-        </div>
-    </div>
-    <!-- /.panel-body -->
-</div>
-<!-- /.panel -->
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <i class="fa fa-file-o fa-fw"></i> New Dialog
-        </div>
-        <!-- /.panel-heading -->
-        <div class="panel-body">
-            <div class="form-group input-group">
-                <span class="input-group-addon">Name</span>
-                <input type="text" class="form-control" placeholder="Dialog Name">
-            </div>
-            <div class="form-group input-group">
-                <span class="input-group-addon">Field</span>
-                <input type="text" class="form-control" placeholder="Field Name">
-            </div>
-            <label>Next Dialog</label>
-            <select class="form-control">
-                <option selected>None</option>
-                <option>Dialog 2</option>
-            </select><br/>
-            <label>Log Events</label>
-            <select class="form-control">
-                <option>GetName</option>
-                <option>Blah</option>
-            </select><br/>
-            <label>Grammars</label>
-            <select class="form-control">
-                <option selected>getZip.xml</option>
-                <option>getZip_DTMF.xml</option>
-            </select><br/>
-            <div class="form-group input-group">
-                <span class="input-group-addon">Initial Logic</span>
-                <input type="text" class="form-control" placeholder="<if></if>">
-            </div>
-            <div class="form-group input-group">
-                <span class="input-group-addon">Audio</span>
-                <input type="text" class="form-control" placeholder="/Surveys/LiveAgentSurvey">
-            </div>
-                <button type="reset" class="btn btn-default">Reset</button>
-                <button type="submit" class="btn btn-default">Save</button>
 
+        <div class="view-animate-container">
+            <div ng-view class="view-animate"></div>
         </div>
-        <!-- /.panel-body -->
+
     </div>
-    <!-- /.panel -->
-</div>
 <!-- /.col-lg-8 -->
 <div class="col-lg-4">
-    <div class="panel panel-default">
+
+
+    <!-- SORTABLE DIALOGS-->
+    <div class="panel panel-primary" ng-controller="testController">
         <div class="panel-heading">
-            <i class="fa fa-sitemap fa-fw"></i> Dialogs
+            <i class="fa fa-sitemap fa-fw"></i>  Dialogs
+        </div>
+        <div ui-tree class="panel-body">
+
+            <ol ui-tree-nodes="" ng-model="vxmlApp.dialogs">
+                <li ng-repeat="dialog in vxmlApp.dialogs" ui-tree-node>
+                <div class="" ui-tree-handle>
+                    <a class="pull-right btn btn-circle btn-xs dragButton" data-nodrag="" ng-click="remove(this)"><span class="glyphicon glyphicon-remove"></span></a>
+                    <a class="pull-right btn btn-circle btn-xs dragButton" data-nodrag="" href="#dialog/{{dialog.id}}"><span class="glyphicon glyphicon-edit"></span></a>
+                    <a class="list-group-item">
+                        <i class="fa fa-tasks fa-fw"></i> {{dialog.dialogName}}
+                                    <span class="text-muted small"><em>{{dialog.added | date: 'MM/dd/yy'}}</em>
+                                    </span>
+
+                    </a>
+                </div>
+                </li>
+            </ol>
+
+
+
+        </div>
+
+    </div>
+    <!-- End - SORTABLE DIALOGS -->
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <i class="fa fa-sitemap fa-fw"></i> Actions
         </div>
         <!-- /.panel-heading -->
         <div class="panel-body">
-            <div class="list-group">
 
-                <a href="#" class="list-group-item">
-                    <i class="fa fa-tasks fa-fw"></i> Dialog 1
-                                    <span class="pull-right text-muted small"><em>43 minutes ago</em>
-                                    </span>
-                </a>
-                <a href="#" class="list-group-item">
-                    <i class="fa fa-tasks fa-fw"></i> Dialog 2
-                                    <span class="pull-right text-muted small"><em>49 minutes ago</em>
-                                    </span>
-                </a>
-                <a href="#" class="list-group-item">
-                    <i class="fa fa-tasks fa-fw"></i> Dialog 3
-                                    <span class="pull-right text-muted small"><em>50 minutes ago</em>
-                                    </span>
-                </a>
-                <a href="#" class="list-group-item">
-                    <i class="fa fa-tasks fa-fw"></i> Dialog 4
-                                    <span class="pull-right text-muted small"><em>7/1/2014</em>
-                                    </span>
-                </a>
-                <a href="#" class="list-group-item">
-                    <i class="fa fa-tasks fa-fw"></i> Dialog 5
-                                    <span class="pull-right text-muted small"><em>7/1/2014</em>
-                                    </span>
-                </a>
-
-            </div>
-            <!-- /.list-group -->
+            <a href="#" class="btn btn-default btn-block">New Application</a>
             <a href="#" class="btn btn-default btn-block">Print VUI</a>
         </div>
         <!-- /.panel-body -->
@@ -423,9 +331,16 @@
 
 </div>
 <script src="bower_components/angular/angular.min.js" type="text/javascript"></script>
+<script src="bower_components/angular-loading-bar/build/loading-bar.min.js"></script>
+<script src="bower_components/angular-local-storage/angular-local-storage.min.js"></script>
+<script src="bower_components/angular-route/angular-route.min.js"></script>
 <script src="bower_components/jquery/dist/jquery.min.js" type="text/javascript"></script>
 <script src="bower_components/bootstrap/js/bootstrap.min.js"></script>
 <script src="bower_components/metisMenu/dist/metisMenu.min.js"></script>
+<script src="app/controllers/testController.js"></script>
+<script src="bower_components/angular-ui-tree/dist/angular-ui-tree.min.js"></script>
+<script src="bower_components/angular-animate/angular-animate.min.js"></script>
+
 <script type="text/javascript">
     $(function() {
 
