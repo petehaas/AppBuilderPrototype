@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script data-require="jquery@1.10.1"
+            data-semver="1.10.1"
+            src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <link data-require="bootstrap@3.0.0"
+          data-semver="3.0.0" rel="stylesheet"
+          href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" />
+    <script data-require="bootstrap@3.0.0"
+            data-semver="3.0.0"
+            src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    <script src="jquery.bootstrap.wizard.js"></script>
+    <link rel="stylesheet" href="style.css" />
+    <script data-require="angular.js@1.0.8"
+            data-semver="1.0.8"
+            src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
+    <script src="rcSubmit.js"></script>
+    <script src="rcDisabled.js"></script>
+    <script src="rcWizard.js"></script>
+    <script src="verascapeWizardController.js"></script>
+    <script src="verascapeWizardApp.js"></script>
+</head>
+
+<body ng-app="verascapeWizardApp">
+<div class="container" >
+    <div class="row">
+        <div class="col-xs-12 col-sm-8 col-sm-offset-3">
+            <h1>Create Verascape Application</h1>
+            <div ng-controller="verascapeWizardController"
+                 rc-wizard="verascapeWizard" rc-disabled="rc.firstForm.submitInProgress">
+                <ul class="nav rc-nav-wizard">
+                    <li class="active">
+                        <a class="active" href="#first" data-toggle="tab">
+                            <span class="badge">1</span>
+                            <span>Start</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#second" data-toggle="tab">
+                            <span class="badge">2</span>
+                            <span> Almost There</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#last" data-toggle="tab">
+                            <span class="badge">3</span>
+                            <span>Nearly There</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#last" data-toggle="tab">
+                            <span class="badge">4</span>
+                            <span>Done</span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <form class="tab-pane active" id="first" name="firstForm"
+                          rc-submit="saveState()" rc-step novalidate>
+                        <h2>Setup</h2>
+                        <div class="form-group"
+                             ng-class="{'has-error': rc.firstForm.needsAttention(firstForm.name)}">
+                            <label class="control-label">Name</label>
+                            <input name="name" class="form-control" type="text" required
+                                   ng-model="app.name"/>
+                        </div>
+                        <div class="form-group"
+                             ng-class="{'has-error': rc.firstForm.needsAttention(firstForm.description)}">
+                            <label class="control-label">Description</label>
+                            <input name="description" class="form-control" type="text" required
+                                   ng-model="app.description" />
+                        </div>
+                    </form>
+                    <form class="tab-pane" id="second" name="secondForm" rc-submit rc-step>
+                        <h2>Client Info</h2>
+                        <div class="form-group">
+                            <label class="control-label">Client</label>
+                            <input name="client" class="form-control" type="text"
+                                   ng-model="app.client" />
+                        </div>
+
+                    </form>
+                    <form class="tab-pane" id="last" name="lastForm" rc-submit="completeWizard()" rc-step>
+                        <h2>Type of App</h2>
+                        <div class="form-group">
+                            <label class="control-label">Please Select:</label>
+                            <p class="form-control-static">{{ app.appType }}</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">Settings:</label>
+                            <p class="form-control-static">
+
+                                {{ app.name }}, {{ app.description }} {{ app.client }}
+                            </p>
+                        </div>
+                    </form>
+                </div>
+                <div class="form-group">
+                    <div class="pull-right">
+                        <a class="btn btn-default" ng-click="rc.verascapeWizard.backward()"
+                           ng-show="rc.verascapeWizard.currentIndex > rc.verascapeWizard.firstIndex">Back</a>
+                        <a class="btn btn-primary" data-loading-text="Please Wait..." ng-click="rc.verascapeWizard.forward()"
+                           ng-show="rc.verascapeWizard.currentIndex < rc.verascapeWizard.navigationLength">Continue</a>
+                        <a class="btn btn-primary" ng-click="rc.verascapeWizard.forward()"
+                           ng-show="rc.verascapeWizard.currentIndex == rc.verascapeWizard.navigationLength">Complete</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>
