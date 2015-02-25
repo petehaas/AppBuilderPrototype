@@ -6,9 +6,10 @@ app.factory('verascapeApplicationService', ['$http', '$q', 'localStorageService'
 
 
          var applicationFactory = {};
+         var _maintainers = ['phaas@verascape.com','jmitchell@verascape.com'];
+         var _platforms = ['Verascape','NewNet'];
 
-
-        var _dialogs = [
+         var _dialogs = [
             {
                 id: 1,
                 order: 1,
@@ -58,15 +59,12 @@ app.factory('verascapeApplicationService', ['$http', '$q', 'localStorageService'
                 variables: [],
                 properties: [],
                 prompts: [],
-                initital: {},
+                initial: {},
                 filled: {},
                 maxReco: {},
                 added: new Date()
             }
-        ];
-
-        var _maintainers = ['phaas@verascape.com','jmitchell@verascape.com'];
-        var _platforms = ['Verascape','NewNet'];
+         ];
 
          var _getApplications = function(){
 
@@ -118,8 +116,7 @@ app.factory('verascapeApplicationService', ['$http', '$q', 'localStorageService'
 
 
              return vxmlApps;
-    };
-
+        };
 
         applicationFactory.getApplications = _getApplications;
         applicationFactory.maintainers = _maintainers;

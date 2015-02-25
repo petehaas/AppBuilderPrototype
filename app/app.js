@@ -1,3 +1,19 @@
+'use strict';
+var app = angular.module('verascapeApp',
+    ['ngRoute',
+        'LocalStorageModule',
+        'angular-loading-bar',
+        'ui.tree',
+        'ngAnimate',
+        'ui.bootstrap',
+        'app.core',
+        'ui.router',
+        'app.layout']);
+
+
+
+
+/*
 var app = angular.module('AngularAuthApp',['ngRoute','LocalStorageModule','angular-loading-bar']);
 
 app.config(function($routeProvider) {
@@ -28,3 +44,4 @@ app.config(function($routeProvider) {
     app.run(['authService', function (authService) {
         authService.fillAuthData();
     }]);
+*/

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+    <Say voice="woman">Please say your address.</Say>
+    <Record action="http://apps.verascape.com:1337/speechapps/address/"
+            maxLength="20" />
+</Response>

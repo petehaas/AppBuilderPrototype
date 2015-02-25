@@ -20,6 +20,8 @@ app.factory('verascapeCustomerService', ['$http', '$q', 'localStorageService',
                  value: '71'
              });
 
+             return customerList;
+
     };
 
 

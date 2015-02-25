@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - plugins/jquery.bootstrap.wizard.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>plugins/jquery.bootstrap.wizard.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">69.66</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">245</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">62.07</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">2.70</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/*!
+ * jQuery twitter bootstrap wizard plugin
+ * Examples and documentation at: http://github.com/VinceG/twitter-bootstrap-wizard
+ * version 1.0
+ * Requires jQuery v1.3.2 or later
+ * Dual licensed under the MIT and GPL licenses:
+ * http://www.opensource.org/licenses/mit-license.php
+ * http://www.gnu.org/licenses/gpl.html
+ * Authors: Vadim Vincent Gabriel (http://vadimg.com), Jason Gill (www.gilluminate.com)
+ */
+;(function($) {
+    var bootstrapWizardCreate = function(element, options) {
+        var element = $(element);
+        var obj = this;
+
+        // Merge options with defaults
+        var $settings = $.extend({}, $.fn.bootstrapWizard.defaults, options);
+        var $activeTab = null;
+        var $navigation = null;
+
+        this.rebindClick = function(selector, fn)
+        {
+            selector.unbind(&#039;click&#039;, fn).bind(&#039;click&#039;, fn);
+        }
+
+        this.fixNavigationButtons = function() {
+            // Get the current active tab
+            if(!$activeTab.length) {
+                // Select first one
+                $navigation.find(&#039;a:first&#039;).tab(&#039;show&#039;);
+                $activeTab = $navigation.find(&#039;li:first&#039;);
+            }
+
+            // See if we&#039;re currently in the first/last then disable the previous and last buttons
+            $($settings.previousSelector, element).toggleClass(&#039;disabled&#039;, (obj.firstIndex() &gt;= obj.currentIndex()));
+            $($settings.nextSelector, element).toggleClass(&#039;disabled&#039;, (obj.currentIndex() &gt;= obj.navigationLength()));
+
+            // We are unbinding and rebinding to ensure single firing and no double-click errors
+            obj.rebindClick($($settings.nextSelector, element), obj.next);
+            obj.rebindClick($($settings.previousSelector, element), obj.previous);
+            obj.rebindClick($($settings.lastSelector, element), obj.last);
+            obj.rebindClick($($settings.firstSelector, element), obj.first);
+
+            if($settings.onTabShow &amp;&amp; typeof $settings.onTabShow === &#039;function&#039; &amp;&amp; $settings.onTabShow($activeTab, $navigation, obj.currentIndex())===false){
+                return false;
+            }
+        };
+
+        this.next = function(e) {
+
+            // If we clicked the last then dont activate this
+            if(element.hasClass(&#039;last&#039;)) {
+                return false;
+            }
+
+            if($settings.onNext &amp;&amp; typeof $settings.onNext === &#039;function&#039; &amp;&amp; $settings.onNext($activeTab, $navigation, obj.nextIndex())===false){
+                return false;
+            }
+
+            // Did we click the last button
+            $index = obj.nextIndex();
+            if($index &gt; obj.navigationLength()) {
+            } else {
+                $navigation.find(&#039;li:eq(&#039;+$index+&#039;) a&#039;).tab(&#039;show&#039;);
+            }
+        };
+
+        this.previous = function(e) {
+
+            // If we clicked the first then dont activate this
+            if(element.hasClass(&#039;first&#039;)) {
+                return false;
+            }
+
+            if($settings.onPrevious &amp;&amp; typeof $settings.onPrevious === &#039;function&#039; &amp;&amp; $settings.onPrevious($activeTab, $navigation, obj.previousIndex())===false){
+                return false;
+            }
+
+            $index = obj.previousIndex();
+            if($index &lt; 0) {
+            } else {
+                $navigation.find(&#039;li:eq(&#039;+$index+&#039;) a&#039;).tab(&#039;show&#039;);
+            }
+        };
+
+        this.first = function(e) {
+            if($settings.onFirst &amp;&amp; typeof $settings.onFirst === &#039;function&#039; &amp;&amp; $settings.onFirst($activeTab, $navigation, obj.firstIndex())===false){
+                return false;
+            }
+
+            // If the element is disabled then we won&#039;t do anything
+            if(element.hasClass(&#039;disabled&#039;)) {
+                return false;
+            }
+            $navigation.find(&#039;li:eq(0) a&#039;).tab(&#039;show&#039;);
+
+        };
+        this.last = function(e) {
+            if($settings.onLast &amp;&amp; typeof $settings.onLast === &#039;function&#039; &amp;&amp; $settings.onLast($activeTab, $navigation, obj.lastIndex())===false){
+                return false;
+            }
+
+            // If the element is disabled then we won&#039;t do anything
+            if(element.hasClass(&#039;disabled&#039;)) {
+                return false;
+            }
+            $navigation.find(&#039;li:eq(&#039;+obj.navigationLength()+&#039;) a&#039;).tab(&#039;show&#039;);
+        };
+        this.currentIndex = function() {
+            return $navigation.find(&#039;li&#039;).index($activeTab);
+        };
+        this.firstIndex = function() {
+            return 0;
+        };
+        this.lastIndex = function() {
+            return obj.navigationLength();
+        };
+        this.getIndex = function(e) {
+            return $navigation.find(&#039;li&#039;).index(e);
+        };
+        this.nextIndex = function() {
+            return $navigation.find(&#039;li&#039;).index($activeTab) + 1;
+        };
+        this.previousIndex = function() {
+            return $navigation.find(&#039;li&#039;).index($activeTab) - 1;
+        };
+        this.navigationLength = function() {
+            return $navigation.find(&#039;li&#039;).length - 1;
+        };
+        this.activeTab = function() {
+            return $activeTab;
+        };
+        this.nextTab = function() {
+            return $navigation.find(&#039;li:eq(&#039;+(obj.currentIndex()+1)+&#039;)&#039;).length ? $navigation.find(&#039;li:eq(&#039;+(obj.currentIndex()+1)+&#039;)&#039;) : null;
+        };
+        this.previousTab = function() {
+            if(obj.currentIndex() &lt;= 0) {
+                return null;
+            }
+            return $navigation.find(&#039;li:eq(&#039;+parseInt(obj.currentIndex()-1)+&#039;)&#039;);
+        };
+        this.show = function(index) {
+            return element.find(&#039;li:eq(&#039; + index + &#039;) a&#039;).tab(&#039;show&#039;);
+        };
+        this.disable = function(index) {
+            $navigation.find(&#039;li:eq(&#039;+index+&#039;)&#039;).addClass(&#039;disabled&#039;);
+        };
+        this.enable = function(index) {
+            $navigation.find(&#039;li:eq(&#039;+index+&#039;)&#039;).removeClass(&#039;disabled&#039;);
+        };
+        this.hide = function(index) {
+            $navigation.find(&#039;li:eq(&#039;+index+&#039;)&#039;).hide();
+        };
+        this.display = function(index) {
+            $navigation.find(&#039;li:eq(&#039;+index+&#039;)&#039;).show();
+        };
+        this.remove = function(args) {
+            var $index = args[0];
+            var $removeTabPane = typeof args[1] != &#039;undefined&#039; ? args[1] : false;
+            var $item = $navigation.find(&#039;li:eq(&#039;+$index+&#039;)&#039;);
+
+            // Remove the tab pane first if needed
+            if($removeTabPane) {
+                var $href = $item.find(&#039;a&#039;).attr(&#039;href&#039;);
+                $($href).remove();
+            }
+
+            // Remove menu item
+            $item.remove();
+        };
+
+        $navigation = element.find(&#039;ul:first&#039;, element);
+        $activeTab = $navigation.find(&#039;li.active&#039;, element);
+
+        if(!$navigation.hasClass($settings.tabClass)) {
+            $navigation.addClass($settings.tabClass);
+        }
+
+        // Load onInit
+        if($settings.onInit &amp;&amp; typeof $settings.onInit === &#039;function&#039;){
+            $settings.onInit($activeTab, $navigation, 0);
+        }
+
+        // Load onShow
+        if($settings.onShow &amp;&amp; typeof $settings.onShow === &#039;function&#039;){
+            $settings.onShow($activeTab, $navigation, obj.nextIndex());
+        }
+
+        // Work the next/previous buttons
+        obj.fixNavigationButtons();
+
+        $(&#039;a[data-toggle=&quot;tab&quot;]&#039;, $navigation).on(&#039;click&#039;, function (e) {
+            // Get the index of the clicked tab
+            var clickedIndex = $navigation.find(&#039;li&#039;).index($(e.currentTarget).parent(&#039;li&#039;));
+            if($settings.onTabClick &amp;&amp; typeof $settings.onTabClick === &#039;function&#039; &amp;&amp; $settings.onTabClick($activeTab, $navigation, obj.currentIndex(), clickedIndex)===false){
+                return false;
+            }
+        });
+
+        $(&#039;a[data-toggle=&quot;tab&quot;]&#039;, $navigation).on(&#039;shown shown.bs.tab&#039;, function (e) {  // use shown instead of show to help prevent double firing
+            $element = $(e.target).parent();
+            var nextTab = $navigation.find(&#039;li&#039;).index($element);
+
+            // If it&#039;s disabled then do not change
+            if($element.hasClass(&#039;disabled&#039;)) {
+                return false;
+            }
+
+            if($settings.onTabChange &amp;&amp; typeof $settings.onTabChange === &#039;function&#039; &amp;&amp; $settings.onTabChange($activeTab, $navigation, obj.currentIndex(), nextTab)===false){
+                return false;
+            }
+
+            $activeTab = $element; // activated tab
+            obj.fixNavigationButtons();
+        });
+    };
+    $.fn.bootstrapWizard = function(options) {
+        //expose methods
+        if (typeof options == &#039;string&#039;) {
+            var args = Array.prototype.slice.call(arguments, 1)
+            if(args.length === 1) {
+                args.toString();
+            }
+            return this.data(&#039;bootstrapWizard&#039;)[options](args);
+        }
+        return this.each(function(index){
+            var element = $(this);
+            // Return early if this element already has a plugin instance
+            if (element.data(&#039;bootstrapWizard&#039;)) return;
+            // pass options to plugin constructor
+            var wizard = new bootstrapWizardCreate(element, options);
+            // Store plugin object in this element&#039;s data
+            element.data(&#039;bootstrapWizard&#039;, wizard);
+        });
+    };
+
+// expose options
+    $.fn.bootstrapWizard.defaults = {
+        tabClass:         &#039;nav nav-pills&#039;,
+        nextSelector:     &#039;.wizard li.next&#039;,
+        previousSelector: &#039;.wizard li.previous&#039;,
+        firstSelector:    &#039;.wizard li.first&#039;,
+        lastSelector:     &#039;.wizard li.last&#039;,
+        onShow:           null,
+        onInit:           null,
+        onNext:           null,
+        onPrevious:       null,
+        onLast:           null,
+        onFirst:          null,
+        onTabChange:      null,
+        onTabClick:       null,
+        onTabShow:        null
+    };
+
+})(jQuery);</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ complexity.cyclomatic }} <br>
+    Length : {{ complexity.halstead.length }} <br>
+    Difficulty : {{ complexity.halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ complexity.halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

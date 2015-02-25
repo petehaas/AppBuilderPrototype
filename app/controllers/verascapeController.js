@@ -1,97 +1,113 @@
-'use strict';
-var app = angular.module('verascapeApp',
-    ['ngRoute','LocalStorageModule','angular-loading-bar','ui.tree','ngAnimate','ui.bootstrap']);
+(function() {
+    'use strict';
 
-app.controller('verascapeController', ['$scope','$routeParams','verascapeCustomerService','verascapeApplicationService','$modal',
-    function ($scope,$routeParams,verascapeCustomerService,verascapeApplicationService,$modal) {
+    var app = angular.module('verascapeApp');
 
-    $scope.customerList = verascapeCustomerService.getCustList();
-    $scope.maintainers = verascapeApplicationService.maintainers;
-    $scope.platforms = verascapeApplicationService.platforms;
-    $scope.vxmlApps = verascapeApplicationService.getApplications();
-    $scope.prompts = verascapeApplicationService.prompts;
-    $scope.grammars = verascapeApplicationService.grammars;
-    $scope.logEvents = verascapeApplicationService.logEvents;
-    $scope.modalItems = $scope.grammars;
-    $scope.modalHeading = "";
+    angular.module('verascapeApp')
+           .controller('verascapeController',verascapeController);
+
+    verascapeController.$inject = ['$scope','$stateParams','$routeParams','verascapeCustomerService','verascapeApplicationService','$modal'];
 
 
-    if ($routeParams.applicationId)
-        $scope.selectedApplication = $routeParams.applicationId;
-    else
-        $scope.selectedApplication = 1;
+        function verascapeController ($scope, $stateParams, $routeParams, verascapeCustomerService, verascapeApplicationService, $modal) {
 
-    $scope.vxmlApp =   $scope.vxmlApps.filter(isSelectedApplication)[0];
-    $scope.selectedDialog = $routeParams.dialogId;
+            $scope.customerList = verascapeCustomerService.getCustList();
+            $scope.maintainers = verascapeApplicationService.maintainers;
+            $scope.platforms = verascapeApplicationService.platforms;
+            $scope.vxmlApps = verascapeApplicationService.getApplications();
+            $scope.prompts = verascapeApplicationService.prompts;
+            $scope.grammars = verascapeApplicationService.grammars;
+            $scope.logEvents = verascapeApplicationService.logEvents;
+            $scope.modalItems = $scope.grammars;
+            $scope.modalHeading = "";
 
-    $scope.save = function(){
-      alert('Saved!');
-    };
+            if ($stateParams.applicationId)
+              $scope.selectedApplication = $stateParams.applicationId;
+            else
+              $scope.selectedApplication = 1;
 
-    function isSelectedApplication(element) {
+           // if ($routeParams.applicationId)
+           //     $scope.selectedApplication = $routeParams.applicationId;
+           // else
+           //     $scope.selectedApplication = 1;
 
-          return (element.id === parseInt($scope.selectedApplication));
+            $scope.vxmlApp = $scope.vxmlApps.filter(isSelectedApplication)[0];
+            //$scope.selectedDialog = $routeParams.dialogId;
+            $scope.selectedDialog = $stateParams.dialogId;
 
-    }
-
-        $scope.openModal = function (item) {
-
-            var modalInstance = $modal.open({
-                templateUrl: 'promptsModal.html',
-                controller: verascapeInstanceController,
-                size: 'lg',
-                resolve: {
-                    items: function () {
-
-                        $scope.modalHeading = item;
-                        if (item === 'grammars')
-                            return $scope.grammars;
-                        else if (item === 'prompts')
-                            return $scope.prompts;
-                        else
-                            return $scope.logEvents;
-                    },
-                    heading: function() { return item;}
-                }
-            });
-            modalInstance.result.then(function (selectedItem) {
-                $scope.selected = selectedItem;
-            }, function () {
-                console.log('Modal dismissed');
-            });
-        }
-
-        var verascapeInstanceController = function ($scope, $modalInstance, items, heading) {
-
-            $scope.modalHeading = heading
-            $scope.modalItems = items;
-            $scope.selected = {
-                item: $scope.modalItems[0]
+            $scope.save = function () {
+                alert('Saved!');
             };
 
-            $scope.ok = function () {
-                $modalInstance.close($scope.selected.item);
+            function isSelectedApplication(element) {
+
+                return (element.id === parseInt($scope.selectedApplication));
+
+            }
+
+            $scope.openModal = function (item) {
+
+                var modalInstance = $modal.open({
+                    templateUrl: 'promptsModal.html',
+                    controller: verascapeInstanceController,
+                    size: 'lg',
+                    resolve: {
+                        items: function () {
+
+                            $scope.modalHeading = item;
+                            if (item === 'grammars')
+                                return $scope.grammars;
+                            else if (item === 'prompts')
+                                return $scope.prompts;
+                            else
+                                return $scope.logEvents;
+                        },
+                        heading: function () {
+                            return item;
+                        }
+                    }
+                });
+                modalInstance.result.then(function (selectedItem) {
+                    $scope.selected = selectedItem;
+                }, function () {
+                    console.log('v Modal dismissed');
+                });
+            }
+
+            var verascapeInstanceController = function ($scope, $modalInstance, items, heading) {
+
+                $scope.modalHeading = heading
+                $scope.modalItems = items;
+                $scope.selected = {
+                    item: $scope.modalItems[0]
+                };
+
+                $scope.ok = function () {
+                    $modalInstance.close($scope.selected.item);
+                };
+
+                $scope.cancel = function () {
+                    $modalInstance.dismiss('cancel');
+                };
             };
 
-            $scope.cancel = function () {
-                $modalInstance.dismiss('cancel');
-            };
         };
 
-}]);
+    /*
+    app.config(['$routeProvider', function ($routeProvider) {
 
-app.config(['$routeProvider', function ($routeProvider) {
+        $routeProvider.
+            when('/application/:applicationId', {
+                templateUrl: 'app/views/application.html',
+                controller: 'verascapeController'
+            }).
+            when('/dialog/:dialogId', {
+                templateUrl: 'app/views/dialog.html',
+                controller: 'verascapeController'
+            }).
 
-    $routeProvider.
-        when('/application/:applicationId', {
-           templateUrl: 'app/views/application.html',
-           controller: 'verascapeController'
-        }).
-        when('/dialog/:dialogId', {
-            templateUrl: 'app/views/dialog.html',
-            controller: 'verascapeController'
-        }).
+            otherwise({redirectTo: '/'});
+    }]);
+    */
 
-        otherwise({redirectTo: '/'});
-}]);
-
+})();

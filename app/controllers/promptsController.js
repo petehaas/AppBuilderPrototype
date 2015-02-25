@@ -19,7 +19,7 @@ app.controller('ModalDemoCtrl', ['$scope','$modal','$log', function ($scope, $mo
         modalInstance.result.then(function (selectedItem) {
             $scope.selected = selectedItem;
         }, function () {
-            $log.info('Modal dismissed at: ' + new Date());
+            $log.info('propts Modal dismissed at: ' + new Date());
         });
     };
 }]);

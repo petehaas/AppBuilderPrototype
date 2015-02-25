@@ -1,0 +1,15 @@
+{
+  "name": "vAudio",
+  "version": "0.1.0",
+  "description": "service that will send audio for transcription",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "node-wit": "1.0.0"
+  },
+  "author": "Pete Haas",
+  "license": "ISC"
+}
