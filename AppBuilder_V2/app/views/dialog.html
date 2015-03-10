@@ -1,0 +1,136 @@
+<div class="panel panel-primary" ng-controller="verascapeController">
+    <div class="panel-heading" ng-repeat="dialog in vxmlApp.dialogs | filter: {id: selectedDialog}">
+        <i class="fa fa-file-o fa-fw"></i> {{dialog.dialogName}}
+    </div>
+    <!-- /.panel-heading -->
+    <div class="panel-body">
+
+        <!-- start tabs -->
+        <!-- Nav tabs -->
+        <ul id="dialogButtons" class="nav nav-pills" role="tablist">
+            <li class="active"><a target="_self" href="#settings" role="tab" data-toggle="tab">Settings</a></li>
+            <li id="grammarButton"><a target="_self" href="#grammars" role="tab" data-toggle="tab">Grammars</a></li>
+            <li><a target="_self" href="#prompts" role="tab" data-toggle="tab">Prompts</a></li>
+            <li><a target="_self" href="#logging" role="tab" data-toggle="tab">Logging</a></li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+
+            <div class="tab-pane active" id="settings"  ng-repeat="dialog in vxmlApp.dialogs | filter: {id: selectedDialog}">
+                <br/>
+                <div class="form-group input-group">
+                    <span class="input-group-addon">Name</span>
+                    <input type="text" class="form-control" value="{{dialog.dialogName}}" placeholder="Dialog Name">
+                </div>
+                <div class="form-group input-group">
+                    <span class="input-group-addon">Field</span>
+                    <input type="text" class="form-control" value="{{dialog.fieldName}}" placeholder="Field Name">
+                </div>
+                <label>Next Dialog</label>
+                <select class="form-control">
+                    <option selected>None</option>
+                    <option>Dialog 2</option>
+                </select><br/>
+
+
+                <div class="form-group input-group">
+                    <span class="input-group-addon">Initial Logic</span>
+                    <input type="text" class="form-control" placeholder="<if></if>">
+                </div>
+                <div class="form-group input-group">
+                    <span class="input-group-addon">Audio</span>
+                    <input type="text" class="form-control" placeholder="/Surveys/LiveAgentSurvey">
+                </div>
+                <button type="reset" class="btn btn-default">Reset</button>
+                <button type="submit" class="btn btn-default">Save</button>
+            </div>
+            <div class="tab-pane" id="grammars" ui-tree>
+
+                <br/>
+                <ol ui-tree-nodes="" ng-model="grammars">
+                    <li ng-repeat="grammar in grammars" ui-tree-node>
+                        <div class="" ui-tree-handle>
+                            <a class="pull-right btn btn-circle btn-xs dragButton" data-nodrag="" ng-click="remove(this)"><span class="glyphicon glyphicon-remove"></span></a>
+                            <a class="pull-right btn btn-circle btn-xs dragButton" data-nodrag="" ng-click="openModal('grammars')" href=""><span class="glyphicon glyphicon-edit"></span></a>
+                            <a class="list-group-item">
+                                <i class="fa fa-fw fa-microphone"></i> {{grammar.name}}
+                                    <span class="text-muted small"><em>{{grammar.file}}</em>
+                                    </span>
+
+                            </a>
+                        </div>
+                    </li>
+                </ol>
+
+            </div>
+            <div class="tab-pane" id="prompts" ng-controller="verascapeController" ui-tree>
+                <br/>
+                <ol ui-tree-nodes="" ng-model="prompts">
+                    <li ng-repeat="prompt in prompts" ui-tree-node>
+                        <div class="" ui-tree-handle>
+                            <a class="pull-right btn btn-circle btn-xs dragButton" data-nodrag="" ng-click="remove(this)"><span class="glyphicon glyphicon-remove"></span></a>
+                            <a class="pull-right btn btn-circle btn-xs dragButton" data-nodrag="" ng-click="openModal('prompts')" href=""><span class="glyphicon glyphicon-edit"></span></a>
+                            <a class="list-group-item">
+                                <i class="fa fa-fw fa-volume-up"></i> {{prompt.tts}}
+                                    <span class="text-muted small"><em>{{prompt.audioFile}}</em>
+                                    </span>
+
+                            </a>
+                        </div>
+                    </li>
+                </ol>
+
+            </div>
+            <div class="tab-pane" id="logging" ng-controller="verascapeController" ui-tree>
+                <br/>
+                <ol ui-tree-nodes="" ng-model="logEvents">
+                    <li ng-repeat="logging in logEvents" ui-tree-node>
+                        <div class="" ui-tree-handle>
+                            <a class="pull-right btn btn-circle btn-xs dragButton" data-nodrag="" ng-click="remove(this)"><span class="glyphicon glyphicon-remove"></span></a>
+                            <a class="pull-right btn btn-circle btn-xs dragButton" data-nodrag="" href="" ng-click="openModal('logEvents')"><span class="glyphicon glyphicon-edit"></span></a>
+                            <a class="list-group-item">
+                                <i class="fa fa-fw fa-file-text-o"></i> {{logging.name}}
+                                    <span class="text-muted small"><em>{{logging.value}}</em>
+                                    </span>
+
+                            </a>
+                        </div>
+                    </li>
+                </ol>
+            </div>
+
+
+
+        </div>
+
+        <!-- end tabs-->
+
+
+    </div>
+    <!-- /.panel-body -->
+</div>
+<!-- /.panel -->
+
+<div ng-controller="verascapeController">
+    <script type="text/ng-template" id="promptsModal.html">
+        <div class="modal-header">
+            <h3 class="modal-title">{{modalHeading}}</h3>
+        </div>
+        <div class="modal-body">
+            <ul>
+                <li ng-repeat="item in modalItems">
+                    <a ng-click="selected.item = item">{{ item }}</a>
+                </li>
+            </ul>
+            Selected: <b>{{ selected.item }}</b>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="ok()">OT</button>
+            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        </div>
+    </script>
+
+
+    <div ng-show="selected">Selection from a modal: {{ selected }}</div>
+</div>

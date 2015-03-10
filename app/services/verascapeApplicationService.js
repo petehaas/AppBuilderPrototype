@@ -1,6 +1,7 @@
 'use strict';
 
-app.factory('verascapeApplicationService', ['$http', '$q', 'localStorageService',
+angular.module('verascapeApp')
+       .factory('verascapeApplicationService', ['$http', '$q', 'localStorageService',
 
     function ($http, $q, localStorageService) {
 

@@ -8,7 +8,8 @@ var app = angular.module('verascapeApp',
         'ui.bootstrap',
         'app.core',
         'ui.router',
-        'app.layout']);
+        'app.layout'
+        ]);
 
 
 

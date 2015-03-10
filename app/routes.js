@@ -26,21 +26,3 @@ angular.module('verascapeApp')
         ;
 
     }]);
-
-
-   /*
-    .config(['$routeProvider', function ($routeProvider) {
-
-    $routeProvider.
-        when('/application/:applicationId', {
-            templateUrl: 'app/views/application.html',
-            controller: 'verascapeController'
-        }).
-        when('/dialog/:dialogId', {
-            templateUrl: 'app/views/dialog.html',
-            controller: 'verascapeController'
-        }).
-
-        otherwise({redirectTo: '/'});
-}]);
-*/
